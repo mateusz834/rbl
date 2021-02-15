@@ -115,7 +115,7 @@ ip-addr rbl|ip-addr rbl (...)
 
 # Domain mode
 ```
-rbl.sh -f -x dbltest.com -c dbl.spamhaus.org
+#rbl.sh -f -x dbltest.com -c dbl.spamhaus.org
 IP: dbltest.com RBL: dbl.spamhaus.org
         QUERY: dbltest.com.dbl.spamhaus.org
         Result: LISTED
