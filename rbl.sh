@@ -37,6 +37,13 @@ case "${flag}" in
 esac
 done
 
+#check if storage dir does not exist (if it is not empty) and return error
+( [ ! -z "$storageDir" ] && [ ! -d "$storageDir" ] )  && ( echo "Direcory: $storageDir does not exist or it is not a directory" >> /dev/stderr; exit 1 )
+
+#check if hook is executable (if it is not empty) otheriwse return error
+( [ ! -z "$hook" ] && [ ! -x "$hook" ] ) && ( echo "File: $hook is not a executable or does not exist, check permissions"; exit 1 )
+( [ ! -z "$addhook" ] && [ ! -x "$addhook" ] ) && ( echo "File: $addhook is not a executable or does not exist, check permissions"; exit 1 )
+( [ ! -z "$delhook" ] && [ ! -x "$delhook" ] ) && ( echo "File: $delhook is not a executable or does not exist, check permissions"; exit 1 )
 
 uIPs=()
 uRBLs=()
@@ -195,14 +202,14 @@ if [ ! -z "$storageDir" ]; then
 		delhookin=()
 
 		while read line; do
-			l="$(echo "$line" | tr -d '<>')"
+			l="$(echo "$line" | tr -d '<>' | awk '{$1=$1};1')"
 			if [[ ${line:0:1} == "<" ]];then
-				echo -e "\t-$l"
-				hookin[${#hookin[*]}]="-$l"
+				echo -e "\t- $l"
+				hookin[${#hookin[*]}]="- $l"
 				delhookin[${#delhookin[*]}]="$l"
 			else
-				echo -e "\t+$l"
-				hookin[${#hookin[*]}]="+$l"
+				echo -e "\t+ $l"
+				hookin[${#hookin[*]}]="+ $l"
 				addhookin[${#addhookin[*]}]="$l"
 			fi
 		done <<< $(echo "$out")
@@ -219,7 +226,7 @@ if [ ! -z "$storageDir" ]; then
 		for i in ${!addhookin[*]}; do
 			ahin="$ahin${addhookin[$i]}"
 			if [ $i -ne $(( ${#addhookin[*]} - 1 )) ]; then
-				ehin="$ahin|"
+				ahin="$ahin|"
 			fi
     		done
 
