@@ -17,6 +17,8 @@ function help()
 {
 	echo -e "\t$0 -i ip-file -r rbl-file [-s storageDIR] [-h hookFile] [-a add-hookFile] [-d del-hookfile]]" 
 	echo -e "\t$0 -x ip-addr -c RBL" 
+	echo -e "\t$0 -f -i fqdn-file -r rbl-file [-s storageDIR] [-h hookFile] [-a add-hookFile] [-d del-hookfile]]" 
+	echo -e "\t$0 -f -x fqdn -c RBL" 
 	exit 1
 }
 
