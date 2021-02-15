@@ -54,9 +54,9 @@ done
 ( [ ! -z "$storageDir" ] && [ ! -d "$storageDir" ] )  && ( echo "Direcory: $storageDir does not exist or it is not a directory" >> /dev/stderr; exit 1 )
 
 #check if hook is executable (if it is not empty) otheriwse return error
-( [ ! -z "$hook" ] && [ ! -x "$hook" ] ) && ( echo "File: $hook is not a executable or does not exist, check permissions"; exit 1 )
-( [ ! -z "$addhook" ] && [ ! -x "$addhook" ] ) && ( echo "File: $addhook is not a executable or does not exist, check permissions"; exit 1 )
-( [ ! -z "$delhook" ] && [ ! -x "$delhook" ] ) && ( echo "File: $delhook is not a executable or does not exist, check permissions"; exit 1 )
+( [ ! -z "$hook" ] && [ ! -x "$hook" ] ) && ( echo "File: $hook is not a executable or does not exist, check permissions" >> /dev/stderr; exit 1 )
+( [ ! -z "$addhook" ] && [ ! -x "$addhook" ] ) && ( echo "File: $addhook is not a executable or does not exist, check permissions" >> /dev/stderr; exit 1 )
+( [ ! -z "$delhook" ] && [ ! -x "$delhook" ] ) && ( echo "File: $delhook is not a executable or does not exist, check permissions" >> /dev/stderr; exit 1 )
 
 uIPs=()
 uRBLs=()
@@ -109,7 +109,7 @@ for ip in ${uIPs[*]}; do
 	#if not domain mode
 	if [ -z "$domainMode" ]; then 
 		#check if ip address is in vaild format
-		(sipcalc "$ip" | grep -i ERR > /dev/null 2>&1 ) &&  (echo "$ip is not vaild ip address" > /dev/stderr; exit 1)
+		(sipcalc "$ip" | grep -i ERR > /dev/null 2>&1 ) &&  (echo "$ip is not vaild ip address" >> /dev/stderr; exit 1)
 		if [[ $ip =~ .*:.* ]]; then
 			#ipv6
 			modifiedIPs[i]="$(sipcalc "$ip" | grep -ih "Expanded Address" | cut -d' ' -f3 | tr -d ':'  | rev | sed -e 's/\(.\)/\1./g')"
@@ -127,7 +127,7 @@ for ip in ${uIPs[*]}; do
 done 
 
 if [ ${#modifiedIPs[@]} -eq 0 ]; then
-	echo "no ip addresses inside $inIP file"
+	echo "no ip addresses inside $inIP file" >> /dev/stderr
 	exit 1
 fi
 
@@ -142,7 +142,7 @@ for rbl in ${uRBLs[*]}; do
 done
 
 if [ ${#RBLs[@]} -eq 0 ]; then
-	echo "no RBLs inside $inRBL file"
+	echo "no RBLs inside $inRBL file" >> /dev/stderr
 	exit 1
 fi
 
