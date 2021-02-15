@@ -25,6 +25,14 @@ function help()
 IP=""
 RBL=""
 
+for i in "$@"
+do
+	if [[ "$i" == "--help" || "$i" == "help" ]]; then
+		help 
+		exit 1
+	fi
+done
+
 while getopts i:r:h:a:d::x:c:s:f flag
 do
 case "${flag}" in
