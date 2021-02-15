@@ -11,6 +11,7 @@ addhook=""
 delhook=""
 storageDir=""
 
+domainMode=""
 
 function help() 
 {
@@ -22,7 +23,7 @@ function help()
 IP=""
 RBL=""
 
-while getopts i:r:h:a:d::x:c:s: flag
+while getopts i:r:h:a:d::x:c:s:f flag
 do
 case "${flag}" in
 	i) inIP="${OPTARG}";;
@@ -33,9 +34,11 @@ case "${flag}" in
 	x) IP="${OPTARG}";;
 	c) RBL="${OPTARG}";;
 	s) storageDir="${OPTARG}";;
+	f) domainMode=1;;
 	?) help >> /dev/stderr;;
 esac
 done
+
 
 #check if storage dir does not exist (if it is not empty) and return error
 ( [ ! -z "$storageDir" ] && [ ! -d "$storageDir" ] )  && ( echo "Direcory: $storageDir does not exist or it is not a directory" >> /dev/stderr; exit 1 )
@@ -91,20 +94,25 @@ i=0
 for ip in ${uIPs[*]}; do
 	#if empty line continue
 	[ -z "$ip" ] && continue
+	
+	
+	#if not domain mode
+	if [ -z "$domainMode" ]; then 
+		#check if ip address is in vaild format
+		(sipcalc "$ip" | grep -i ERR > /dev/null 2>&1 ) &&  (echo "$ip is not vaild ip address" > /dev/stderr; exit 1)
+		if [[ $ip =~ .*:.* ]]; then
+			#ipv6
+			modifiedIPs[i]="$(sipcalc "$ip" | grep -ih "Expanded Address" | cut -d' ' -f3 | tr -d ':'  | rev | sed -e 's/\(.\)/\1./g')"
+ 		else
+			#ipv4
+			modifiedIPs[i]="$(echo "$ip" | awk -F. '{print $4"."$3"." $2"."$1}')."
+		fi  
+	else
+		modifiedIPs[i]="$ip."
 
-	#check if ip address is in vaild format
-	(sipcalc "$ip" | grep -i ERR > /dev/null 2>&1 ) &&  (echo "$ip is not vaild ip address" > /dev/stderr; exit 1)
+	fi
 
 	IPs[i]="$ip"
-	
-	if [[ $ip =~ .*:.* ]]; then
-		#ipv6
-		modifiedIPs[i]="$(sipcalc "$ip" | grep -ih "Expanded Address" | cut -d' ' -f3 | tr -d ':'  | rev | sed -e 's/\(.\)/\1./g')"
- 	else
-		#ipv4
-		modifiedIPs[i]="$(echo "$ip" | awk -F. '{print $4"."$3"." $2"."$1}')."
-	fi  
-
 	i=$((i+1))
 done 
 
