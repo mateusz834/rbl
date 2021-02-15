@@ -127,7 +127,7 @@ for ip in ${uIPs[*]}; do
 done 
 
 if [ ${#modifiedIPs[@]} -eq 0 ]; then
-	echo "no ip addresses inside $inIP file" >> /dev/stderr
+	echo "$inIP file is empty" >> /dev/stderr
 	exit 1
 fi
 
