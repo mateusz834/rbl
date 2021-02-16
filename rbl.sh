@@ -15,7 +15,8 @@ domainMode=""
 
 function help() 
 {
-	echo -e "\t$0 -i ip-file -r rbl-file [-s storageDIR] [-h hookFile] [-a add-hookFile] [-d del-hookfile]]" 
+	echo "Syntax:"
+	echo -e "\t$0 -i ip-file -r rbl-file [-s storageDIR] [-g hookFile] [-a add-hookFile] [-d del-hookfile]]" 
 	echo -e "\t$0 -x ip-addr -c RBL" 
 	echo -e "\t$0 -f -i fqdn-file -r rbl-file [-s storageDIR] [-h hookFile] [-a add-hookFile] [-d del-hookfile]]" 
 	echo -e "\t$0 -f -x fqdn -c RBL" 
@@ -27,18 +28,17 @@ RBL=""
 
 for i in "$@"
 do
-	if [[ "$i" == "--help" || "$i" == "help" ]]; then
-		help 
-		exit 1
+	if [[ "$i" == "--help" || "$i" == "-h" ]]; then
+		help >> /dev/stderr
 	fi
 done
 
-while getopts i:r:h:a:d::x:c:s:f flag
+while getopts i:r:g:a:d::x:c:s:f flag
 do
 case "${flag}" in
 	i) inIP="${OPTARG}";;
 	r) inRBL="${OPTARG}";;
-	h) hook="${OPTARG}";;
+	g) hook="${OPTARG}";;
 	a) addhook="${OPTARG}";;
 	d) delhook="${OPTARG}";;
 	x) IP="${OPTARG}";;

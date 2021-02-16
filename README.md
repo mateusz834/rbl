@@ -101,7 +101,7 @@ Changes:
 # Hooks
 Hooks are executed with '$in' variable. <br>
 $in variable syntax:<br>
-1)hook (-h)
+1)hook (-g)
 ```
 {-|+} ip-addr rbl|{-|+} ip-addr rbl (...) 
 - 1.10.16.3 zen.spamhaus.org|+ 1.10.16.22 zen.spamhaus.org|+ 1.10.16.33 zen.spamhaus.org|+ 2a0e:fa00::4 zen.spamhaus.org
