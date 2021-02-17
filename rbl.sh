@@ -81,7 +81,7 @@ if [[ ! -z "$IP" || ! -z "$RBL" ]]; then
 	hook=""
 	storageDir=""
 else
-	( [ -z "$inRBL" ] || [ -z "$inIP" ] ) && ( echo "-i and -r flags or -x and -c are reequired" >> /dev/stderr; exit 1)
+	( [ -z "$inRBL" ] || [ -z "$inIP" ] ) && ( echo "-i and -r flags or -x and -c are required" >> /dev/stderr; exit 1)
 
 	i=0
 	while read ip; do
